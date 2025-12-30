@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mentoring Comfamiliar | Innovation Nexus</title>
+    <!-- Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            /* Indigo 500 */
+            --primary-dark: #4338ca;
+            /* Indigo 700 */
+            --secondary: #8b5cf6;
+            /* Violet 500 */
+            --accent: #10b981;
+            /* Emerald 500 */
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+            background-size: 100% 100%;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Innovation Nexus Glassmorphism */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floating {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+
+        /* Custom Inputs */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            transition: color 0.3s ease;
+        }
+
+        .input-field:focus+.input-icon {
+            color: var(--primary);
+        }
+
+        /* Timeline Stream */
+        .timeline-stream {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid #e2e8f0;
+        }
+
+        .timeline-node {
+            position: absolute;
+            left: -2.6rem;
+            top: 0;
+            width: 3rem;
+            height: 3rem;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        /* Toast & Bento Specifics */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            min-width: 300px;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--accent);
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+    </style>
+</head>
+
+<body class="text-slate-700 min-h-screen">
+    <!-- Configuration -->
+    <input type="hidden" id="api-url"
+        value="https://script.google.com/macros/s/AKfycbxDoMZZaxG1g8Cufc4bDb_WBfuzlLg0W-wDmFgjcEU98AEgwSQM_PfTOGy0CxOx0n5u/exec">
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- VIEW: LOGIN (Split Layout) -->
+    <div id="login-view" class="flex min-h-screen w-full bg-white relative overflow-hidden">
+
+        <!-- Left Column: Image Hero -->
+        <div class="hidden lg:flex lg:w-[60%] relative bg-slate-900 overflow-hidden">
+            <div class="absolute inset-0">
+                <img src="https://i.imgur.com/9RYlUP4.png" alt="Innovation Nexus"
+                    class="w-full h-full object-cover opacity-90">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
+
+            <div class="relative z-10 flex flex-col justify-end p-16 h-full text-white space-y-6">
+                <div class="w-16 h-1 border-t-4 border-emerald-400 mb-4 slide-up"></div>
+                <h1 class="text-6xl font-extrabold leading-tight slide-up delay-100">
+                    El futuro no se espera,<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">se
+                        construye.</span>
+                </h1>
+                <p class="text-xl text-slate-300 max-w-xl font-light slide-up delay-200">
+                    Únete al programa de Mentoring Comfamiliar y conecta con las mentes que están transformando la
+                    organización.
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Column: Login Form -->
+        <div class="w-full lg:w-[40%] flex flex-col justify-center items-center p-8 relative">
+            <!-- Mobile Background Hint -->
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50 lg:hidden -z-10"></div>
+
+            <div class="w-full max-w-md space-y-10 slide-up delay-300">
+                <!-- Header -->
+                <div class="text-center lg:text-left space-y-2">
+                    <img src="https://i.imgur.com/yyI6FWO.png" alt="Logo"
+                        class="h-16 mx-auto lg:mx-0 mb-6 drop-shadow-md">
+                    <h2 class="text-3xl font-bold text-slate-900">Bienvenido de nuevo</h2>
+                    <p class="text-slate-500">Ingresa tus credenciales para acceder al Nexus</p>
+                </div>
+
+                <!-- Form -->
+                <div class="space-y-6">
+                    <div class="input-group">
+                        <input type="text" id="email-input" class="input-field peer" placeholder=" " autocomplete="off">
+                        <label
+                            class="absolute left-10 top-4 text-slate-400 text-sm transition-all 
+                                    peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-indigo-600
+                                    peer-not-placeholder-shown:-top-2 peer-not-placeholder-shown:left-3 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:bg-white peer-not-placeholder-shown:px-1">
+                            Correo Corporativo
+                        </label>
+                        <i data-lucide="mail" class="input-icon w-5 h-5"></i>
+                    </div>
+
+                    <button onclick="app.login()"
+                        class="group w-full py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-xl 
+                                     hover:shadow-2xl hover:bg-black transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-3 overflow-hidden relative">
+                        <span class="relative z-10">Ingresar al Portal</span>
+                        <i data-lucide="arrow-right"
+                            class="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform"></i>
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Footer -->
+                <div class="text-center text-sm text-slate-400 pt-8">
+                    &copy; 2025 Gestión Humana y Desarrollo
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workspace View -->
+    <div id="workspace-view" class="hidden min-h-screen relative z-10 flex">
+
+        <!-- Floating Sidebar -->
+        <aside
+            class="fixed left-4 top-4 bottom-4 w-20 glass glass-card rounded-2xl flex flex-col items-center py-8 z-50 hidden md:flex">
+            <!-- Logo Icon -->
+            <div
+                class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold mb-8 shadow-lg shadow-indigo-500/30">
+                <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+
+            <!-- Nav Items -->
+            <div class="flex flex-col gap-6 flex-1 w-full px-2">
+                <button
+                    class="w-full aspect-square rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center relative group">
+                    <i data-lucide="layout-grid" class="w-6 h-6"></i>
+                    <div
+                        class="absolute left-14 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                        Dashboard</div>
+                </button>
+                <div class="h-px bg-slate-200 w-10 mx-auto"></div>
+                <button onclick="app.logout()"
+                    class="w-full aspect-square rounded-xl text-slate-400 hover:bg-slate-50 hover:text-red-500 flex items-center justify-center transition-colors relative group">
+                    <i data-lucide="log-out" class="w-6 h-6"></i>
+                    <div
+                        class="absolute left-14 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                        Cerrar Sesión</div>
+                </button>
+            </div>
+
+            <!-- User Avatar (Bottom) -->
+            <div class="mt-auto relative group cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
+                    <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User"
+                        class="w-full h-full object-cover" id="sidebar-avatar">
+                </div>
+                <!-- Tooltip User Info -->
+                <div
+                    class="absolute left-14 bottom-0 bg-white glass-card p-4 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap min-w-[150px]">
+                    <p id="user-name-display" class="font-bold text-slate-800 text-sm">Usuario</p>
+                    <p id="user-role-display" class="text-xs text-indigo-500 font-medium">Mentee</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Header (Visible only on small screens) -->
+        <header class="md:hidden fixed top-0 left-0 right-0 h-16 glass flex items-center justify-between px-4 z-50">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+                    M</div>
+                <span class="font-bold text-slate-800">Mentoring</span>
+            </div>
+            <button onclick="app.logout()" class="p-2 text-slate-500"><i data-lucide="log-out"
+                    class="w-5 h-5"></i></button>
+        </header>
+
+        <main class="flex-1 container mx-auto px-4 py-8 md:ml-24 max-w-6xl space-y-8 mt-16 md:mt-0">
+            <!-- Welcome Section -->
+            <div
+                class="text-center md:text-left py-4 slide-up flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-4xl font-bold text-slate-800 mb-2">Hola, <span id="welcome-name"
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Compañero</span>
+                        👋</h2>
+                    <p class="text-lg text-slate-600">Bienvenido a tu Nexus de Progreso.</p>
+                </div>
+            </div>
+
+            <!-- Stats/Progress -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 slide-up delay-100">
+                <!-- Progress Card -->
+                <div
+                    class="glass glass-card p-6 rounded-2xl md:col-span-2 flex items-center justify-between relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-1">Tu Progreso</h3>
+                        <p class="text-slate-500 text-sm mb-4">Sesiones completadas</p>
+                        <div class="flex items-baseline gap-2">
+                            <span id="completed-count" class="text-4xl font-bold text-indigo-600">0</span>
+                            <span class="text-slate-400">/ 6</span>
+                        </div>
+                    </div>
+                    <div class="relative w-24 h-24">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="48" cy="48" r="40" stroke="#e2e8f0" stroke-width="8" fill="none"></circle>
+                            <circle id="progress-ring" cx="48" cy="48" r="40" stroke="#4f46e5" stroke-width="8"
+                                fill="none" stroke-dasharray="251.2" stroke-dashoffset="251.2"
+                                class="transition-all duration-1000 ease-out"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i data-lucide="award" class="w-8 h-8 text-indigo-500"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Session Button Card -->
+                <button onclick="app.openModal('session-modal')"
+                    class="group glass glass-card p-6 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-indigo-500/50 transition-all cursor-pointer relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform relative z-10">
+                        <i data-lucide="plus" class="w-6 h-6 text-indigo-600"></i>
+                    </div>
+                    <span class="font-medium text-slate-700 group-hover:text-indigo-700 relative z-10">Nueva
+                        Sesión</span>
+                </button>
+            </div>
+
+            <!-- Sessions Timeline/Grid -->
+            <div class="slide-up delay-200">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-slate-800">Historial de Sesiones</h3>
+                    <div class="flex gap-2">
+                        <span
+                            class="px-3 py-1 bg-white rounded-full text-xs font-medium text-slate-500 shadow-sm border border-slate-100">Total:
+                            <span id="total-sessions">0</span></span>
+                    </div>
+                </div>
+
+                <div id="sessions-list" class="grid gap-4 timeline-line relative pl-0 md:pl-0">
+                    <div class="glass glass-card p-8 rounded-2xl text-center text-slate-500">
+                        <i data-lucide="calendar" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
+                        <p>No hay sesiones registradas aún</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Admin Dashboard View -->
+    <div id="admin-view" class="hidden min-h-screen bg-slate-50/50 pb-20 relative z-10">
+        <header
+            class="sticky top-0 z-50 border-b border-indigo-500/20 bg-slate-900/90 backdrop-blur-md text-white shadow-lg shadow-indigo-500/10">
+            <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold shadow-indigo-500/50 shadow-md">
+                        A</div>
+                    <span class="font-bold text-white tracking-wide">Command Center</span>
+                </div>
+                <button onclick="app.logout()"
+                    class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-red-400 transition-colors"
+                    title="Cerrar Sesión">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-4 py-8 space-y-8">
+            <!-- KPIs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card p-5 rounded-xl border-l-4 border-indigo-500">
+                    <p class="text-slate-500 text-sm font-medium">Total Sesiones</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-total">0</h3>
+                </div>
+                <div class="glass-card p-5 rounded-xl border-l-4 border-emerald-500">
+                    <p class="text-slate-500 text-sm font-medium">Duplas Activas</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-duplas">0</h3>
+                </div>
+                <div class="glass-card p-5 rounded-xl border-l-4 border-blue-500">
+                    <p class="text-slate-500 text-sm font-medium">Horas Totales</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-hours">0</h3>
+                </div>
+                <div class="glass-card p-5 rounded-xl border-l-4 border-purple-500">
+                    <p class="text-slate-500 text-sm font-medium">Media Sesiones/Dupla</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-avg">0</h3>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass-card p-6 rounded-xl">
+                    <h4 class="font-semibold text-slate-800 mb-6">Sesiones por Mes</h4>
+                    <canvas id="sessionsChart"></canvas>
+                </div>
+                <div class="glass-card p-6 rounded-xl">
+                    <h4 class="font-semibold text-slate-800 mb-6">Estado de Duplas</h4>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="glass-card rounded-xl overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h4 class="font-semibold text-slate-800">Registros Recientes</h4>
+                    <div class="flex">
+                        <button onclick="app.loadAdminData()"
+                            class="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Actualizar
+                        </button>
+                        <button onclick="app.openModal('create-dupla-modal')"
+                            class="ml-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Nueva Dupla
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-500 font-medium">
+                            <tr>
+                                <th class="px-6 py-4">Fecha</th>
+                                <th class="px-6 py-4">Mentor</th>
+                                <th class="px-6 py-4">Mentee</th>
+                                <th class="px-6 py-4">Tema</th>
+                                <th class="px-6 py-4">Duración</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Session Modal -->
+    <div id="session-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+            onclick="app.closeModal('session-modal')"></div>
+        <div
+            class="absolute inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center p-4 pointer-events-none">
+            <div
+                class="bg-white w-full max-w-lg md:rounded-2xl rounded-t-2xl shadow-2xl transform transition-transform duration-300 translate-y-full md:translate-y-0 pointer-events-auto max-h-[90vh] overflow-y-auto">
+                <div
+                    class="sticky top-0 bg-white z-10 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-800">Registrar Sesión</h3>
+                    <button onclick="app.closeModal('session-modal')"
+                        class="p-2 hover:bg-slate-100 rounded-full text-slate-500">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <form id="session-form" onsubmit="event.preventDefault(); app.submitSession()" class="p-6 space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Fecha de la sesión</label>
+                        <input type="date" name="fecha" required
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Tema tratado</label>
+                        <input type="text" name="tema" required placeholder="Ej: Definición de objetivos"
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Hora Inicio</label>
+                            <input type="time" name="hora_inicio" required
+                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Hora Fin</label>
+                            <input type="time" name="hora_fin" required
+                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Compromisos / Notas</label>
+                        <textarea name="compromisos" rows="3"
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Evidencia (Opcional)</label>
+                        <div
+                            class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors cursor-pointer relative">
+                            <input type="file" id="evidence-file"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                onchange="app.handleFileSelect(this)">
+                            <div id="file-placeholder">
+                                <i data-lucide="upload-cloud" class="w-8 h-8 text-indigo-400 mx-auto mb-2"></i>
+                                <p class="text-sm text-slate-500">Click para subir foto o documento</p>
+                            </div>
+                            <div id="file-selected"
+                                class="hidden flex items-center justify-center gap-2 text-indigo-600 font-medium">
+                                <i data-lucide="check-circle" class="w-5 h-5"></i>
+                                <span id="file-name">archivo.pdf</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" id="submit-btn"
+                            class="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                            <span>Guardar Sesión</span>
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Dupla Modal -->
+    <div id="create-dupla-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+            onclick="app.closeModal('create-dupla-modal')"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto">
+                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-800">Crear Nueva Dupla</h3>
+                    <button onclick="app.closeModal('create-dupla-modal')"
+                        class="p-2 hover:bg-slate-100 rounded-full text-slate-500">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form id="create-dupla-form" onsubmit="event.preventDefault(); app.createDupla()" class="p-6 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Mentor</label>
+                            <input type="text" name="mentor" required
+                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Email Mentor</label>
+                            <input type="email" name="mentorEmail" required
+                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Mentee</label>
+                            <input type="text" name="mentee" required
+                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Email Mentee</label>
+                            <input type="email" name="menteeEmail" required
+                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Área / Proceso</label>
+                        <input type="text" name="area" required placeholder="Ej: Recursos Humanos"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Objetivo (Opcional)</label>
+                        <textarea name="goal" rows="2"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit"
+                            class="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-colors">
+                            Crear y Enviar Invitaciones
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic (Preserved) -->
+    <script>
+        const app = {
+            apiUrl: document.getElementById('api-url').value,
+            currentUser: null,
+            sessions: [],
+            isLoading: false,
+
+            init: function () {
+                lucide.createIcons();
+                this.checkSession();
+            },
+
+            setLoading: function (loading) {
+                this.isLoading = loading;
+                // Add/remove global loading overlay if desired, or disable buttons
+                const btn = document.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = loading;
+                    btn.classList.toggle('opacity-50', loading);
+                    btn.innerHTML = loading ?
+                        `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> Guardando...` :
+                        `<span>Guardar Sesión</span><i data-lucide="save" class="w-4 h-4"></i>`;
+                    lucide.createIcons();
+                }
+            },
+
+            showToast: function (message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <div class="p-2 rounded-full ${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}">
+                        <i data-lucide="${type === 'success' ? 'check' : 'alert-circle'}" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800">${type === 'success' ? '¡Éxito!' : 'Error'}</h4>
+                        <p class="text-sm text-slate-500">${message}</p>
+                    </div>
+                `;
+                container.appendChild(toast);
+                lucide.createIcons();
+
+                if (type === 'success') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+
+                setTimeout(() => {
+                    toast.style.animation = 'toastIn 0.4s reverse forwards';
+                    setTimeout(() => toast.remove(), 400);
+                }, 4000);
+            },
+
+            showView: function (viewId) {
+                ['login-view', 'workspace-view', 'admin-view'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
+                document.getElementById(viewId).classList.remove('hidden');
+                document.getElementById(viewId).classList.add('fade-in');
+            },
+
+            checkSession: function () {
+                const user = localStorage.getItem('mentoring_user');
+                if (user) {
+                    this.currentUser = JSON.parse(user);
+                    if (this.currentUser.email === 'admin' && this.currentUser.isAdmin) {
+                        this.showView('admin-view');
+                        this.loadAdminData();
+                    } else {
+                        this.loadUserData();
+                    }
+                } else {
+                    this.showView('login-view');
+                }
+            },
+
+            login: function () {
+                const emailInput = document.getElementById('email-input');
+                const email = emailInput.value.trim().toLowerCase();
+
+                if (!email) return this.showToast('Por favor ingresa tu correo', 'error');
+
+                // Simulation for Admin
+                if (email === 'admin') {
+                    const pass = prompt('Contraseña de administrador:');
+                    if (pass === 'admin123') {
+                        this.currentUser = { email: 'admin', isAdmin: true };
+                        localStorage.setItem('mentoring_user', JSON.stringify(this.currentUser));
+                        this.showView('admin-view');
+                        this.loadAdminData();
+                        return;
+                    } else {
+                        return this.showToast('Contraseña incorrecta', 'error');
+                    }
+                }
+
+                // Normal Login - Check Role
+                this.setLoading(true);
+                fetch(this.apiUrl + '?action=getUserRole&email=' + email)
+                    .then(r => r.json())
+                    .then(res => {
+                        this.setLoading(false);
+                        if (res.status === 'success' && res.data) {
+                            this.currentUser = {
+                                email: email,
+                                ...res.data, // role, pairId, name, partnerName, area
+                                isAdmin: false
+                            };
+                            localStorage.setItem('mentoring_user', JSON.stringify(this.currentUser));
+                            this.loadUserData();
+                        } else {
+                            this.showToast('Usuario no encontrado en la base de datos', 'error');
+                        }
+                    })
+                    .catch(e => {
+                        this.setLoading(false);
+                        this.showToast('Error de conexión', 'error');
+                    });
+            },
+
+            logout: function () {
+                localStorage.removeItem('mentoring_user');
+                this.currentUser = null;
+                location.reload();
+            },
+
+            loadUserData: function () {
+                this.showView('workspace-view');
+                document.getElementById('user-name-display').textContent = this.currentUser.name || this.currentUser.email.split('@')[0];
+                document.getElementById('user-role-display').textContent = this.currentUser.role || 'Usuario';
+                document.getElementById('welcome-name').textContent = this.currentUser.name ? this.currentUser.name.split(' ')[0] : 'Compañero';
+
+                // Fetch sessions from backend
+                this.fetchSessions();
+            },
+
+            fetchSessions: function () {
+                // In a real app, you would fetch from Google Sheets here
+                // For now, we simulate or use the actual endpoint if available
+                // Using the apiUrl defined
+
+                const scriptUrl = this.apiUrl + `?action=getSessions&email=${this.currentUser.email}`;
+
+                fetch(scriptUrl)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            this.sessions = data.data;
+                            this.renderSessions();
+                            this.updateProgress();
+                        }
+                    })
+                    .catch(e => console.error("Error loading sessions", e));
+            },
+
+            renderSessions: function () {
+                const list = document.getElementById('sessions-list');
+                const totalEl = document.getElementById('total-sessions');
+
+                if (this.sessions.length === 0) {
+                    list.innerHTML = `
+                        <div class="glass glass-card p-8 rounded-2xl text-center text-slate-500">
+                            <i data-lucide="calendar" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
+                            <p>No hay sesiones registradas aún</p>
+                        </div>`;
+                    totalEl.textContent = '0';
+                    lucide.createIcons();
+                    return;
+                }
+
+                totalEl.textContent = this.sessions.length;
+                // Use timeline-stream class on the container (needs to be added to HTML container if not present, or wrapper)
+                // Actually, let's just make the cards look like timeline nodes
+
+                list.className = "space-y-8 relative pl-8 border-l-2 border-slate-200 ml-4"; // Ad-hoc timeline container styles
+
+                list.innerHTML = this.sessions.map((s, i) => `
+                    <div class="relative pl-4 group">
+                        <!-- Timeline Node -->
+                        <div class="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-white border-4 border-indigo-500 group-hover:scale-125 transition-transform z-10"></div>
+                        
+                        <!-- Card -->
+                        <div class="glass glass-card p-6 rounded-2xl hover:border-indigo-400/50 transition-all hover:-translate-y-1">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="px-2 py-1 rounded-md bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">Sesión ${this.sessions.length - i}</span>
+                                        <span class="text-xs text-slate-400">${new Date(s.fecha).toLocaleDateString()}</span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 text-xl">${s.tema}</h4>
+                                    <p class="text-slate-500 text-sm mt-2 leading-relaxed">${s.compromisos || 'Sin compromisos registrados'}</p>
+                                </div>
+                                <div class="flex items-center gap-4 text-sm font-medium">
+                                    <div class="px-3 py-1.5 rounded-lg bg-slate-50 text-slate-600 flex items-center gap-2">
+                                        <i data-lucide="clock" class="w-4 h-4 text-purple-500"></i>
+                                        <span>${s.duracion}h</span>
+                                    </div>
+                                    ${s.file ? `<a href="${s.file}" target="_blank" class="p-2 rounded-lg bg-slate-50 text-indigo-600 hover:bg-indigo-50 transition-colors"><i data-lucide="paperclip" class="w-4 h-4"></i></a>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                lucide.createIcons();
+            },
+
+            updateProgress: function () {
+                const count = this.sessions.length;
+                const max = 6; // Goal
+                const percentage = Math.min((count / max) * 100, 100);
+
+                document.getElementById('completed-count').textContent = count;
+
+                // Animate circle
+                const circle = document.getElementById('progress-ring');
+                const radius = circle.r.baseVal.value;
+                const circumference = radius * 2 * Math.PI;
+                const offset = circumference - (percentage / 100) * circumference;
+
+                circle.style.strokeDashoffset = offset;
+            },
+
+            openModal: function (modalId) {
+                document.getElementById(modalId).classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            },
+
+            closeModal: function (modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+                document.body.style.overflow = '';
+            },
+
+            handleFileSelect: function (input) {
+                const file = input.files[0];
+                if (file) {
+                    document.getElementById('file-placeholder').classList.add('hidden');
+                    document.getElementById('file-selected').classList.remove('hidden');
+                    document.getElementById('file-name').textContent = file.name;
+                }
+            },
+
+            submitSession: function () {
+                this.setLoading(true);
+                const form = document.getElementById('session-form');
+                const formData = new FormData(form);
+                const fileInput = document.getElementById('evidence-file');
+
+                const sessionData = {
+                    action: 'SaveSession', // Keep casing consistent
+                    pairId: this.currentUser.pairId,
+                    mentorName: this.currentUser.role === 'Mentor' ? this.currentUser.name : this.currentUser.partnerName,
+                    menteeName: this.currentUser.role === 'Mentee' ? this.currentUser.name : this.currentUser.partnerName,
+                    role: this.currentUser.role,
+                    area: this.currentUser.area,
+
+                    email: this.currentUser.email,
+                    fecha: formData.get('fecha'),
+                    tema: formData.get('tema'),
+                    hora_inicio: formData.get('hora_inicio'),
+                    hora_fin: formData.get('hora_fin'),
+                    compromisos: formData.get('compromisos')
+                };
+
+                // Handle file upload if present
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        sessionData.fileContent = e.target.result.split(',')[1]; // Base64
+                        sessionData.fileName = file.name;
+                        sessionData.mimeType = file.type;
+                        this.sendData(sessionData);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    this.sendData(sessionData);
+                }
+            },
+
+            sendData: function (data) {
+                fetch(this.apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                })
+                    .then(r => r.json())
+                    .then(response => {
+                        this.setLoading(false);
+                        if (response.status === 'success') {
+                            this.showToast('Sesión registrada exitosamente');
+                            this.closeModal('session-modal');
+                            document.getElementById('session-form').reset();
+                            // Reset file input UI
+                            document.getElementById('file-placeholder').classList.remove('hidden');
+                            document.getElementById('file-selected').classList.add('hidden');
+                            // Refresh data
+                            this.fetchSessions();
+                        } else {
+                            this.showToast('Error al guardar: ' + response.message, 'error');
+                        }
+                    })
+                    .catch(err => {
+                        this.setLoading(false);
+                        this.showToast('Error de conexión', 'error');
+                        console.error(err);
+                    });
+            },
+
+            loadAdminData: function () {
+                const scriptUrl = this.apiUrl + `?action=getAdminData`;
+                fetch(scriptUrl)
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            this.renderAdminDashboard(res.data);
+                        }
+                    });
+            },
+
+            renderAdminDashboard: function (data) {
+                // KPIs
+                document.getElementById('kpi-total').textContent = data.kpis.totalSessions;
+                document.getElementById('kpi-duplas').textContent = data.kpis.activeDuplas;
+                document.getElementById('kpi-hours').textContent = data.kpis.totalHours.toFixed(1);
+                document.getElementById('kpi-avg').textContent = data.kpis.avgSessions.toFixed(1);
+
+                // Table
+                const tbody = document.getElementById('admin-table-body');
+                tbody.innerHTML = data.recentSessions.map(s => `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-slate-600">${new Date(s.fecha).toLocaleDateString()}</td>
+                        <td class="px-6 py-4 font-medium text-slate-800">${s.mentor}</td>
+                        <td class="px-6 py-4 text-slate-600">${s.mentee}</td>
+                        <td class="px-6 py-4 text-slate-600">${s.tema}</td>
+                        <td class="px-6 py-4 text-slate-600">${s.duracion}h</td>
+                    </tr>
+                `).join('');
+
+                // Charts
+                this.initCharts(data.charts);
+            },
+
+            initCharts: function (chartData) {
+                // Sessions Chart
+                const ctx1 = document.getElementById('sessionsChart').getContext('2d');
+                new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.sessionsByMonth.labels,
+                        datasets: [{
+                            label: 'Sesiones',
+                            data: chartData.sessionsByMonth.data,
+                            backgroundColor: '#4f46e5',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+
+                // Status Chart
+                const ctx2 = document.getElementById('statusChart').getContext('2d');
+                new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Activas', 'Inactivas', 'Completadas'],
+                        datasets: [{
+                            data: [chartData.status.active, chartData.status.inactive, chartData.status.completed],
+                            backgroundColor: ['#10b981', '#cbd5e1', '#4f46e5'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+                });
+            }
+        };
+
+        // Initialize simplified sendData for generic use or override in createDupla
+        app.createDupla = function () {
+            const btn = document.querySelector('#create-dupla-form button');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = "Procesando...";
+
+            const form = document.getElementById('create-dupla-form');
+            const formData = new FormData(form);
+            const data = {
+                action: 'createDupla',
+                mentor: formData.get('mentor'),
+                mentorEmail: formData.get('mentorEmail'),
+                mentee: formData.get('mentee'),
+                menteeEmail: formData.get('menteeEmail'),
+                area: formData.get('area'),
+                goal: formData.get('goal')
+            };
+
+            fetch(this.apiUrl, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+                .then(r => r.json())
+                .then(res => {
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                    if (res.status === 'success') {
+                        this.showToast('Dupla creada y correos enviados');
+                        this.closeModal('create-dupla-modal');
+                        form.reset();
+                        this.loadAdminData();
+                    } else {
+                        this.showToast('Error: ' + res.message, 'error');
+                    }
+                })
+                .catch(e => {
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                    this.showToast('Error de conexión', 'error');
+                });
+        };
+
+        // Start App
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+
+</html>
