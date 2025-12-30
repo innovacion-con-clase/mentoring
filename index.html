@@ -472,7 +472,7 @@
                 </div>
                 <div class="glass-card p-5 rounded-xl border-l-4 border-emerald-500">
                     <p class="text-slate-500 text-sm font-medium">Duplas Activas</p>
-                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-duplas">0</h3>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-active">0</h3>
                 </div>
                 <div class="glass-card p-5 rounded-xl border-l-4 border-blue-500">
                     <p class="text-slate-500 text-sm font-medium">Horas Totales</p>
@@ -496,34 +496,52 @@
                 </div>
             </div>
 
-            <!-- Table -->
-            <div class="glass-card rounded-xl overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                    <h4 class="font-semibold text-slate-800">Registros Recientes</h4>
-                    <div class="flex">
+            <!-- Table & Routes -->
+            <div class="space-y-6">
+                <!-- Header Actions -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-800">Gestión de Duplas</h3>
+                    <div class="flex gap-2">
+                        <button onclick="app.seedData()"
+                            class="text-slate-500 hover:text-indigo-600 text-sm font-medium px-3 py-2 border border-slate-200 rounded-lg bg-white transition-colors"
+                            title="Generar registros de prueba">
+                            <i data-lucide="bot" class="w-4 h-4 inline mr-1"></i> Robots
+                        </button>
                         <button onclick="app.loadAdminData()"
-                            class="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1">
+                            class="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1 bg-indigo-50 px-3 py-2 rounded-lg transition-colors">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i> Actualizar
                         </button>
                         <button onclick="app.openModal('create-dupla-modal')"
-                            class="ml-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                            class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/30">
                             <i data-lucide="plus" class="w-4 h-4"></i> Nueva Dupla
                         </button>
                     </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-slate-50 text-slate-500 font-medium">
-                            <tr>
-                                <th class="px-6 py-4">Fecha</th>
-                                <th class="px-6 py-4">Mentor</th>
-                                <th class="px-6 py-4">Mentee</th>
-                                <th class="px-6 py-4">Tema</th>
-                                <th class="px-6 py-4">Duración</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-table-body" class="divide-y divide-slate-100"></tbody>
-                    </table>
+
+                <!-- Duplas Routes Grid -->
+                <div id="duplas-routes-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- Cards will be injected here -->
+                </div>
+
+                <!-- Recent Records Table -->
+                <div class="glass-card rounded-xl overflow-hidden mt-8">
+                    <div class="p-6 border-b border-slate-100">
+                        <h4 class="font-semibold text-slate-800">Registros Recientes</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 font-medium">
+                                <tr>
+                                    <th class="px-6 py-4">Fecha</th>
+                                    <th class="px-6 py-4">Mentor</th>
+                                    <th class="px-6 py-4">Mentee</th>
+                                    <th class="px-6 py-4">Tema</th>
+                                    <th class="px-6 py-4">Duración</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-table-body" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </main>
@@ -969,6 +987,28 @@
                     });
             },
 
+            seedData: function () {
+                if (!confirm('¿Generar datos de prueba? Esto creará duplas y sesiones aleatorias.')) return;
+
+                const btn = event.currentTarget; // Quick ref
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="animate-spin w-4 h-4 mr-1 inline" data-lucide="loader-2"></i> ...';
+                btn.disabled = true;
+
+                fetch(this.apiUrl + '?action=seedData')
+                    .then(r => r.json())
+                    .then(res => {
+                        this.showToast('Datos generados con éxito', 'success');
+                        this.loadAdminData();
+                    })
+                    .catch(err => this.showToast('Error generando datos', 'error'))
+                    .finally(() => {
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                        lucide.createIcons();
+                    });
+            },
+
             loadAdminData: function () {
                 const scriptUrl = this.apiUrl + `?action=getAdminData`;
                 fetch(scriptUrl)
@@ -983,56 +1023,128 @@
             renderAdminDashboard: function (data) {
                 // KPIs
                 document.getElementById('kpi-total').textContent = data.kpis.totalSessions;
-                document.getElementById('kpi-duplas').textContent = data.kpis.activeDuplas;
-                document.getElementById('kpi-hours').textContent = data.kpis.totalHours.toFixed(1);
-                document.getElementById('kpi-avg').textContent = data.kpis.avgSessions.toFixed(1);
+                document.getElementById('kpi-active').textContent = data.kpis.activeDuplas; // Fixed ID lookup
+                document.getElementById('kpi-hours').textContent = data.kpis.totalHours;
+                document.getElementById('kpi-avg').textContent = data.kpis.avgSessions;
+
+                // Dupla Routes Grid
+                const grid = document.getElementById('duplas-routes-grid');
+                if (data.duplasProgress) {
+                    grid.innerHTML = data.duplasProgress.map(d => {
+                        // Progress Bar Logic
+                        const progress = Math.min((d.count / d.goal) * 100, 100);
+                        const isCompleted = d.status === 'completed';
+                        const statusColor = isCompleted ? 'bg-emerald-500' : (d.status === 'active' ? 'bg-indigo-500' : 'bg-slate-300');
+
+                        return `
+                        <div class="glass glass-card p-6 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                            <div class="absolute top-0 left-0 w-1 h-full ${statusColor}"></div>
+                            
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex -space-x-3">
+                                    <div class="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600" title="${d.mentor}">${d.mentor.split(' ').map(n => n[0]).join('').substring(0, 2)}</div>
+                                    <div class="w-10 h-10 rounded-full border-2 border-white bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600" title="${d.mentee}">${d.mentee.split(' ').map(n => n[0]).join('').substring(0, 2)}</div>
+                                </div>
+                                <span class="px-2 py-1 rounded-md text-xs font-bold uppercase ${d.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}">
+                                    ${d.status === 'completed' ? 'Completado' : (d.status === 'active' ? 'En Curso' : 'Inactivo')}
+                                </span>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h4 class="font-bold text-slate-800 text-sm">${d.mentor} & ${d.mentee}</h4>
+                                <p class="text-xs text-slate-500">Última sesión: ${d.lastSession ? new Date(d.lastSession).toLocaleDateString() : 'N/A'}</p>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-xs font-medium text-slate-500">
+                                    <span>Progreso</span>
+                                    <span>${d.count} / ${d.goal}</span>
+                                </div>
+                                <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                    <div class="h-full ${statusColor} transition-all duration-1000" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    }).join('');
+                } else {
+                    grid.innerHTML = '<p class="text-slate-500 col-span-3 text-center py-8">No hay datos de duplas disponibles.</p>';
+                }
 
                 // Table
                 const tbody = document.getElementById('admin-table-body');
                 tbody.innerHTML = data.recentSessions.map(s => `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap text-slate-600">${new Date(s.fecha).toLocaleDateString()}</td>
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 text-slate-600">${new Date(s.date).toLocaleDateString()}</td>
                         <td class="px-6 py-4 font-medium text-slate-800">${s.mentor}</td>
                         <td class="px-6 py-4 text-slate-600">${s.mentee}</td>
-                        <td class="px-6 py-4 text-slate-600">${s.tema}</td>
-                        <td class="px-6 py-4 text-slate-600">${s.duracion}h</td>
+                        <td class="px-6 py-4 text-slate-600">${s.title}</td>
+                        <td class="px-6 py-4 text-slate-500">${s.duration || 1}h</td>
                     </tr>
                 `).join('');
 
-                // Charts
-                this.initCharts(data.charts);
+                this.renderCharts(data.charts);
+                lucide.createIcons();
             },
 
-            initCharts: function (chartData) {
-                // Sessions Chart
+            renderCharts: function (data) {
+                // Sessions Chart (Area)
                 const ctx1 = document.getElementById('sessionsChart').getContext('2d');
+
+                // Create gradient
+                const gradient = ctx1.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)'); // Indigo
+                gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+
                 new Chart(ctx1, {
-                    type: 'bar',
+                    type: 'line',
                     data: {
-                        labels: chartData.sessionsByMonth.labels,
+                        labels: data.sessionsByMonth.labels,
                         datasets: [{
                             label: 'Sesiones',
-                            data: chartData.sessionsByMonth.data,
-                            backgroundColor: '#4f46e5',
-                            borderRadius: 6
+                            data: data.sessionsByMonth.data,
+                            borderColor: '#4f46e5',
+                            backgroundColor: gradient,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#4f46e5',
+                            pointHoverBackgroundColor: '#4f46e5',
+                            pointHoverBorderColor: '#ffffff'
                         }]
                     },
-                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } }, // Minimalist
+                        scales: {
+                            y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#f1f5f9' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
                 });
 
-                // Status Chart
+                // Status Chart (Doughnut)
                 const ctx2 = document.getElementById('statusChart').getContext('2d');
                 new Chart(ctx2, {
                     type: 'doughnut',
                     data: {
                         labels: ['Activas', 'Inactivas', 'Completadas'],
                         datasets: [{
-                            data: [chartData.status.active, chartData.status.inactive, chartData.status.completed],
-                            backgroundColor: ['#10b981', '#cbd5e1', '#4f46e5'],
-                            borderWidth: 0
+                            data: [data.status.active, data.status.inactive, data.status.completed],
+                            backgroundColor: ['#4f46e5', '#cbd5e1', '#10b981'],
+                            borderWidth: 0,
+                            hoverOffset: 4
                         }]
                     },
-                    options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+                    options: {
+                        responsive: true,
+                        cutout: '70%',
+                        plugins: {
+                            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                        }
+                    }
                 });
             }
         };
