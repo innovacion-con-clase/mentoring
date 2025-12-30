@@ -1092,12 +1092,17 @@
                 // Sessions Chart (Area)
                 const ctx1 = document.getElementById('sessionsChart').getContext('2d');
 
+                // Destroy existing chart if it exists
+                if (this.sessionsChartInstance) {
+                    this.sessionsChartInstance.destroy();
+                }
+
                 // Create gradient
                 const gradient = ctx1.createLinearGradient(0, 0, 0, 400);
                 gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)'); // Indigo
                 gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
 
-                new Chart(ctx1, {
+                this.sessionsChartInstance = new Chart(ctx1, {
                     type: 'line',
                     data: {
                         labels: data.sessionsByMonth.labels,
@@ -1127,7 +1132,13 @@
 
                 // Status Chart (Doughnut)
                 const ctx2 = document.getElementById('statusChart').getContext('2d');
-                new Chart(ctx2, {
+
+                // Destroy existing chart if it exists
+                if (this.statusChartInstance) {
+                    this.statusChartInstance.destroy();
+                }
+
+                this.statusChartInstance = new Chart(ctx2, {
                     type: 'doughnut',
                     data: {
                         labels: ['Activas', 'Inactivas', 'Completadas'],
