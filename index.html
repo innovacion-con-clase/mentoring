@@ -34,14 +34,26 @@
         body {
             font-family: 'Outfit', sans-serif;
             background-color: #f8fafc;
-            overflow-x: hidden;
+            /* Lighter background for better text contrast */
             background-image:
-                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
-                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+                radial-gradient(at 0% 0%, hsla(253, 16%, 95%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 95%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 98%, 1) 0, transparent 50%);
             background-size: 100% 100%;
             background-attachment: fixed;
             min-height: 100vh;
+            color: #1e293b;
+        }
+
+        /* Logo Contrast Fix */
+        .logo-bg {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            padding: 1rem;
+            border-radius: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         /* Innovation Nexus Glassmorphism */
@@ -260,8 +272,9 @@
             <div class="w-full max-w-md space-y-10 slide-up delay-300">
                 <!-- Header -->
                 <div class="text-center lg:text-left space-y-2">
-                    <img src="https://i.imgur.com/yyI6FWO.png" alt="Logo"
-                        class="h-16 mx-auto lg:mx-0 mb-6 drop-shadow-md">
+                    <div class="logo-bg mb-6 mx-auto lg:mx-0 shadow-xl">
+                        <img src="https://i.imgur.com/yyI6FWO.png" alt="Logo" class="h-12 w-auto drop-shadow-sm">
+                    </div>
                     <h2 class="text-3xl font-bold text-slate-900">Bienvenido de nuevo</h2>
                     <p class="text-slate-500">Ingresa tus credenciales para acceder al Nexus</p>
                 </div>
