@@ -3,1209 +3,453 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mentoring Comfamiliar | Innovation Nexus</title>
-    <!-- Fonts: Outfit -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La fe que se arremanga - Invitación Digital</title>
+    <!-- Carga de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
     <style>
+        /* Fuentes Personalizadas */
         :root {
-            --primary: #6366f1;
-            /* Indigo 500 */
-            --primary-dark: #4338ca;
-            /* Indigo 700 */
-            --secondary: #8b5cf6;
-            /* Violet 500 */
-            --accent: #10b981;
-            /* Emerald 500 */
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            font-family: 'Inter', sans-serif;
         }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #f8fafc;
-            /* Lighter background for better text contrast */
-            background-image:
-                radial-gradient(at 0% 0%, hsla(253, 16%, 95%, 1) 0, transparent 50%),
-                radial-gradient(at 50% 0%, hsla(225, 39%, 95%, 1) 0, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(339, 49%, 98%, 1) 0, transparent 50%);
-            background-size: 100% 100%;
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: #1e293b;
+        h1,
+        h2,
+        h3,
+        .font-title {
+            font-family: 'Montserrat', sans-serif;
         }
 
-        /* Logo Contrast Fix */
-        .logo-bg {
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-            padding: 1rem;
-            border-radius: 1rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        /* Clase para evitar scroll en el body cuando un modal está abierto */
+        .modal-open {
+            overflow: hidden;
         }
 
-        /* Innovation Nexus Glassmorphism */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes floating {
+        /* Animaciones suaves */
+        @keyframes radar-pulse {
             0% {
-                transform: translateY(0px);
+                box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4);
             }
 
-            50% {
-                transform: translateY(-10px);
+            70% {
+                box-shadow: 0 0 0 20px rgba(56, 189, 248, 0);
             }
 
             100% {
-                transform: translateY(0px);
+                box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
             }
         }
 
-        .fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
+        .radar-effect {
+            animation: radar-pulse 2s infinite;
         }
 
-        .slide-up {
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-        }
-
-        .delay-100 {
-            animation-delay: 0.1s;
-        }
-
-        .delay-200 {
-            animation-delay: 0.2s;
-        }
-
-        .delay-300 {
-            animation-delay: 0.3s;
-        }
-
-        /* Custom Inputs */
-        .input-group {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid #e2e8f0;
-            border-radius: 1rem;
-            outline: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .input-field:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            transition: color 0.3s ease;
-        }
-
-        .input-field:focus+.input-icon {
-            color: var(--primary);
-        }
-
-        /* Timeline Stream */
-        .timeline-stream {
-            position: relative;
-            padding-left: 2rem;
-            border-left: 2px solid #e2e8f0;
-        }
-
-        .timeline-node {
-            position: absolute;
-            left: -2.6rem;
-            top: 0;
-            width: 3rem;
-            height: 3rem;
-            background: white;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        /* Toast & Bento Specifics */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
-        }
-
-        #toast-container {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            z-index: 100;
-        }
-
-        .toast {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: white;
-            padding: 1rem 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            min-width: 300px;
-        }
-
-        .toast.success {
-            border-left: 4px solid var(--accent);
-        }
-
-        .toast.error {
-            border-left: 4px solid #ef4444;
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
-</head>
-
-<body class="text-slate-700 min-h-screen">
-    <!-- Configuration -->
-    <input type="hidden" id="api-url"
-        value="https://script.google.com/macros/s/AKfycbxDoMZZaxG1g8Cufc4bDb_WBfuzlLg0W-wDmFgjcEU98AEgwSQM_PfTOGy0CxOx0n5u/exec">
-
-    <!-- Toast Container -->
-    <div id="toast-container"></div>
-
-    <!-- VIEW: LOGIN (Split Layout) -->
-    <div id="login-view" class="flex min-h-screen w-full bg-white relative overflow-hidden">
-
-        <!-- Left Column: Image Hero -->
-        <div class="hidden lg:flex lg:w-[60%] relative bg-slate-900 overflow-hidden">
-            <div class="absolute inset-0">
-                <img src="https://i.imgur.com/9RYlUP4.png" alt="Innovation Nexus"
-                    class="w-full h-full object-cover opacity-90">
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
-
-            <div class="relative z-10 flex flex-col justify-end p-16 h-full text-white space-y-6">
-                <div class="w-16 h-1 border-t-4 border-emerald-400 mb-4 slide-up"></div>
-                <h1 class="text-6xl font-extrabold leading-tight slide-up delay-100">
-                    El futuro no se espera,<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">se
-                        construye.</span>
-                </h1>
-                <p class="text-xl text-slate-300 max-w-xl font-light slide-up delay-200">
-                    Únete al programa de Mentoring Comfamiliar y conecta con las mentes que están transformando la
-                    organización.
-                </p>
-            </div>
-        </div>
-
-        <!-- Right Column: Login Form -->
-        <div class="w-full lg:w-[40%] flex flex-col justify-center items-center p-8 relative">
-            <!-- Mobile Background Hint -->
-            <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50 lg:hidden -z-10"></div>
-
-            <div class="w-full max-w-md space-y-10 slide-up delay-300">
-                <!-- Header -->
-                <div class="text-center lg:text-left space-y-2">
-                    <div class="logo-bg mb-6 mx-auto lg:mx-0 shadow-xl">
-                        <img src="https://i.imgur.com/yyI6FWO.png" alt="Logo" class="h-12 w-auto drop-shadow-sm">
-                    </div>
-                    <h2 class="text-3xl font-bold text-slate-900">Bienvenido de nuevo</h2>
-                    <p class="text-slate-500">Ingresa tus credenciales para acceder al Nexus</p>
-                </div>
-
-                <!-- Form -->
-                <div class="space-y-6">
-                    <div class="input-group">
-                        <input type="text" id="email-input" class="input-field peer" placeholder=" " autocomplete="off">
-                        <label
-                            class="absolute left-10 top-4 text-slate-400 text-sm transition-all 
-                                    peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-indigo-600
-                                    peer-not-placeholder-shown:-top-2 peer-not-placeholder-shown:left-3 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:bg-white peer-not-placeholder-shown:px-1">
-                            Correo Corporativo
-                        </label>
-                        <i data-lucide="mail" class="input-icon w-5 h-5"></i>
-                    </div>
-
-                    <button onclick="app.login()"
-                        class="group w-full py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-xl 
-                                     hover:shadow-2xl hover:bg-black transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-3 overflow-hidden relative">
-                        <span class="relative z-10">Ingresar al Portal</span>
-                        <i data-lucide="arrow-right"
-                            class="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform"></i>
-                        <div
-                            class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        </div>
-                    </button>
-                </div>
-
-                <!-- Footer -->
-                <div class="text-center text-sm text-slate-400 pt-8">
-                    &copy; 2025 Gestión Humana y Desarrollo
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Workspace View -->
-    <div id="workspace-view" class="hidden min-h-screen relative z-10 flex">
-
-        <!-- Floating Sidebar -->
-        <aside
-            class="fixed left-4 top-4 bottom-4 w-20 glass glass-card rounded-2xl flex flex-col items-center py-8 z-50 hidden md:flex">
-            <!-- Logo Icon -->
-            <div
-                class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold mb-8 shadow-lg shadow-indigo-500/30">
-                <i data-lucide="zap" class="w-6 h-6"></i>
-            </div>
-
-            <!-- Nav Items -->
-            <div class="flex flex-col gap-6 flex-1 w-full px-2">
-                <button
-                    class="w-full aspect-square rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center relative group">
-                    <i data-lucide="layout-grid" class="w-6 h-6"></i>
-                    <div
-                        class="absolute left-14 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                        Dashboard</div>
-                </button>
-                <div class="h-px bg-slate-200 w-10 mx-auto"></div>
-                <button onclick="app.logout()"
-                    class="w-full aspect-square rounded-xl text-slate-400 hover:bg-slate-50 hover:text-red-500 flex items-center justify-center transition-colors relative group">
-                    <i data-lucide="log-out" class="w-6 h-6"></i>
-                    <div
-                        class="absolute left-14 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                        Cerrar Sesión</div>
-                </button>
-            </div>
-
-            <!-- User Avatar (Bottom) -->
-            <div class="mt-auto relative group cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
-                    <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User"
-                        class="w-full h-full object-cover" id="sidebar-avatar">
-                </div>
-                <!-- Tooltip User Info -->
-                <div
-                    class="absolute left-14 bottom-0 bg-white glass-card p-4 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap min-w-[150px]">
-                    <p id="user-name-display" class="font-bold text-slate-800 text-sm">Usuario</p>
-                    <p id="user-role-display" class="text-xs text-indigo-500 font-medium">Mentee</p>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Mobile Header (Visible only on small screens) -->
-        <header class="md:hidden fixed top-0 left-0 right-0 h-16 glass flex items-center justify-between px-4 z-50">
-            <div class="flex items-center gap-2">
-                <div
-                    class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
-                    M</div>
-                <span class="font-bold text-slate-800">Mentoring</span>
-            </div>
-            <button onclick="app.logout()" class="p-2 text-slate-500"><i data-lucide="log-out"
-                    class="w-5 h-5"></i></button>
-        </header>
-
-        <main class="flex-1 container mx-auto px-4 py-8 md:ml-24 max-w-6xl space-y-8 mt-16 md:mt-0">
-            <!-- Welcome Section -->
-            <div
-                class="text-center md:text-left py-4 slide-up flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div>
-                    <h2 class="text-4xl font-bold text-slate-800 mb-2">Hola, <span id="welcome-name"
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Compañero</span>
-                        👋</h2>
-                    <p class="text-lg text-slate-600">Bienvenido a tu Nexus de Progreso.</p>
-                </div>
-            </div>
-
-            <!-- Stats/Progress -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 slide-up delay-100">
-                <!-- Progress Card -->
-                <div
-                    class="glass glass-card p-6 rounded-2xl md:col-span-2 flex items-center justify-between relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-1">Tu Progreso</h3>
-                        <p class="text-slate-500 text-sm mb-4">Sesiones completadas</p>
-                        <div class="flex items-baseline gap-2">
-                            <span id="completed-count" class="text-4xl font-bold text-indigo-600">0</span>
-                            <span class="text-slate-400">/ 6</span>
-                        </div>
-                    </div>
-                    <div class="relative w-24 h-24">
-                        <svg class="w-full h-full transform -rotate-90">
-                            <circle cx="48" cy="48" r="40" stroke="#e2e8f0" stroke-width="8" fill="none"></circle>
-                            <circle id="progress-ring" cx="48" cy="48" r="40" stroke="#4f46e5" stroke-width="8"
-                                fill="none" stroke-dasharray="251.2" stroke-dashoffset="251.2"
-                                class="transition-all duration-1000 ease-out"></circle>
-                        </svg>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i data-lucide="award" class="w-8 h-8 text-indigo-500"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- New Session Button Card -->
-                <button onclick="app.openModal('session-modal')"
-                    class="group glass glass-card p-6 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-indigo-500/50 transition-all cursor-pointer relative overflow-hidden">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform relative z-10">
-                        <i data-lucide="plus" class="w-6 h-6 text-indigo-600"></i>
-                    </div>
-                    <span class="font-medium text-slate-700 group-hover:text-indigo-700 relative z-10">Nueva
-                        Sesión</span>
-                </button>
-            </div>
-
-            <!-- Sessions Timeline/Grid -->
-            <div class="slide-up delay-200">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-slate-800">Historial de Sesiones</h3>
-                    <div class="flex gap-2">
-                        <span
-                            class="px-3 py-1 bg-white rounded-full text-xs font-medium text-slate-500 shadow-sm border border-slate-100">Total:
-                            <span id="total-sessions">0</span></span>
-                    </div>
-                </div>
-
-                <div id="sessions-list" class="grid gap-4 timeline-line relative pl-0 md:pl-0">
-                    <div class="glass glass-card p-8 rounded-2xl text-center text-slate-500">
-                        <i data-lucide="calendar" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
-                        <p>No hay sesiones registradas aún</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Admin Dashboard View -->
-    <div id="admin-view" class="hidden min-h-screen bg-slate-50/50 pb-20 relative z-10">
-        <header
-            class="sticky top-0 z-50 border-b border-indigo-500/20 bg-slate-900/90 backdrop-blur-md text-white shadow-lg shadow-indigo-500/10">
-            <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div
-                        class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold shadow-indigo-500/50 shadow-md">
-                        A</div>
-                    <span class="font-bold text-white tracking-wide">Command Center</span>
-                </div>
-                <button onclick="app.logout()"
-                    class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-red-400 transition-colors"
-                    title="Cerrar Sesión">
-                    <i data-lucide="log-out" class="w-5 h-5"></i>
-                </button>
-            </div>
-        </header>
-
-        <main class="container mx-auto px-4 py-8 space-y-8">
-            <!-- KPIs -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="glass-card p-5 rounded-xl border-l-4 border-indigo-500">
-                    <p class="text-slate-500 text-sm font-medium">Total Sesiones</p>
-                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-total">0</h3>
-                </div>
-                <div class="glass-card p-5 rounded-xl border-l-4 border-emerald-500">
-                    <p class="text-slate-500 text-sm font-medium">Duplas Activas</p>
-                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-active">0</h3>
-                </div>
-                <div class="glass-card p-5 rounded-xl border-l-4 border-blue-500">
-                    <p class="text-slate-500 text-sm font-medium">Horas Totales</p>
-                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-hours">0</h3>
-                </div>
-                <div class="glass-card p-5 rounded-xl border-l-4 border-purple-500">
-                    <p class="text-slate-500 text-sm font-medium">Media Sesiones/Dupla</p>
-                    <h3 class="text-3xl font-bold text-slate-800 mt-1" id="kpi-avg">0</h3>
-                </div>
-            </div>
-
-            <!-- Charts -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="glass-card p-6 rounded-xl">
-                    <h4 class="font-semibold text-slate-800 mb-6">Sesiones por Mes</h4>
-                    <canvas id="sessionsChart"></canvas>
-                </div>
-                <div class="glass-card p-6 rounded-xl">
-                    <h4 class="font-semibold text-slate-800 mb-6">Estado de Duplas</h4>
-                    <canvas id="statusChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Table & Routes -->
-            <div class="space-y-6">
-                <!-- Header Actions -->
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold text-slate-800">Gestión de Duplas</h3>
-                    <div class="flex gap-2">
-                        <button onclick="app.seedData()"
-                            class="text-slate-500 hover:text-indigo-600 text-sm font-medium px-3 py-2 border border-slate-200 rounded-lg bg-white transition-colors"
-                            title="Generar registros de prueba">
-                            <i data-lucide="bot" class="w-4 h-4 inline mr-1"></i> Robots
-                        </button>
-                        <button onclick="app.loadAdminData()"
-                            class="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1 bg-indigo-50 px-3 py-2 rounded-lg transition-colors">
-                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Actualizar
-                        </button>
-                        <button onclick="app.openModal('create-dupla-modal')"
-                            class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/30">
-                            <i data-lucide="plus" class="w-4 h-4"></i> Nueva Dupla
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Duplas Routes Grid -->
-                <div id="duplas-routes-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <!-- Cards will be injected here -->
-                </div>
-
-                <!-- Recent Records Table -->
-                <div class="glass-card rounded-xl overflow-hidden mt-8">
-                    <div class="p-6 border-b border-slate-100">
-                        <h4 class="font-semibold text-slate-800">Registros Recientes</h4>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-500 font-medium">
-                                <tr>
-                                    <th class="px-6 py-4">Fecha</th>
-                                    <th class="px-6 py-4">Mentor</th>
-                                    <th class="px-6 py-4">Mentee</th>
-                                    <th class="px-6 py-4">Tema</th>
-                                    <th class="px-6 py-4">Duración</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-table-body" class="divide-y divide-slate-100"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Session Modal -->
-    <div id="session-modal" class="fixed inset-0 z-[60] hidden">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
-            onclick="app.closeModal('session-modal')"></div>
-        <div
-            class="absolute inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center p-4 pointer-events-none">
-            <div
-                class="bg-white w-full max-w-lg md:rounded-2xl rounded-t-2xl shadow-2xl transform transition-transform duration-300 translate-y-full md:translate-y-0 pointer-events-auto max-h-[90vh] overflow-y-auto">
-                <div
-                    class="sticky top-0 bg-white z-10 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-slate-800">Registrar Sesión</h3>
-                    <button onclick="app.closeModal('session-modal')"
-                        class="p-2 hover:bg-slate-100 rounded-full text-slate-500">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-
-                <form id="session-form" onsubmit="event.preventDefault(); app.submitSession()" class="p-6 space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Fecha de la sesión</label>
-                        <input type="date" name="fecha" required
-                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Tema tratado</label>
-                        <input type="text" name="tema" required placeholder="Ej: Definición de objetivos"
-                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Hora Inicio</label>
-                            <input type="time" name="hora_inicio" required
-                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Hora Fin</label>
-                            <input type="time" name="hora_fin" required
-                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Compromisos / Notas</label>
-                        <textarea name="compromisos" rows="3"
-                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none resize-none"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Evidencia (Opcional)</label>
-                        <div
-                            class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors cursor-pointer relative">
-                            <input type="file" id="evidence-file"
-                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                onchange="app.handleFileSelect(this)">
-                            <div id="file-placeholder">
-                                <i data-lucide="upload-cloud" class="w-8 h-8 text-indigo-400 mx-auto mb-2"></i>
-                                <p class="text-sm text-slate-500">Click para subir foto o documento</p>
-                            </div>
-                            <div id="file-selected"
-                                class="hidden flex items-center justify-center gap-2 text-indigo-600 font-medium">
-                                <i data-lucide="check-circle" class="w-5 h-5"></i>
-                                <span id="file-name">archivo.pdf</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pt-4">
-                        <button type="submit" id="submit-btn"
-                            class="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                            <span>Guardar Sesión</span>
-                            <i data-lucide="save" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Dupla Modal -->
-    <div id="create-dupla-modal" class="fixed inset-0 z-[60] hidden">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
-            onclick="app.closeModal('create-dupla-modal')"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto">
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-slate-800">Crear Nueva Dupla</h3>
-                    <button onclick="app.closeModal('create-dupla-modal')"
-                        class="p-2 hover:bg-slate-100 rounded-full text-slate-500">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-                <form id="create-dupla-form" onsubmit="event.preventDefault(); app.createDupla()" class="p-6 space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Mentor</label>
-                            <input type="text" name="mentor" required
-                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Email Mentor</label>
-                            <input type="email" name="mentorEmail" required
-                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Mentee</label>
-                            <input type="text" name="mentee" required
-                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Email Mentee</label>
-                            <input type="email" name="menteeEmail" required
-                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Área / Proceso</label>
-                        <input type="text" name="area" required placeholder="Ej: Recursos Humanos"
-                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Objetivo (Opcional)</label>
-                        <textarea name="goal" rows="2"
-                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-                    </div>
-                    <div class="pt-2">
-                        <button type="submit"
-                            class="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-colors">
-                            Crear y Enviar Invitaciones
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script Logic (Preserved) -->
     <script>
-        const app = {
-            apiUrl: document.getElementById('api-url').value,
-            currentUser: null,
-            sessions: [],
-            isLoading: false,
+        // Configuración y variables globales
+        const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbyonuNONVfbmiwAUI0_koTsWABOSJ7iIFZp1dnLYDSKEPlmOJeA09h3BDlF0WhW7paE/exec";
+        // ENLACE DE LA GUÍA (Pendiente actualizar si es necesario)
+        const GUIDE_URL = "https://innovacion-con-clase.github.io/el-radar-del-cielo/";
+        const MEET_URL = "https://meet.google.com/rsj-mbap-jpi";
 
-            init: function () {
-                lucide.createIcons();
-                this.checkSession();
-            },
-
-            setLoading: function (loading) {
-                this.isLoading = loading;
-                // Add/remove global loading overlay if desired, or disable buttons
-                const btn = document.querySelector('button[type="submit"]');
-                if (btn) {
-                    btn.disabled = loading;
-                    btn.classList.toggle('opacity-50', loading);
-                    btn.innerHTML = loading ?
-                        `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> Guardando...` :
-                        `<span>Guardar Sesión</span><i data-lucide="save" class="w-4 h-4"></i>`;
-                    lucide.createIcons();
-                }
-            },
-
-            showToast: function (message, type = 'success') {
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `
-                    <div class="p-2 rounded-full ${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}">
-                        <i data-lucide="${type === 'success' ? 'check' : 'alert-circle'}" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-slate-800">${type === 'success' ? '¡Éxito!' : 'Error'}</h4>
-                        <p class="text-sm text-slate-500">${message}</p>
-                    </div>
-                `;
-                container.appendChild(toast);
-                lucide.createIcons();
-
-                if (type === 'success') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-
-                setTimeout(() => {
-                    toast.style.animation = 'toastIn 0.4s reverse forwards';
-                    setTimeout(() => toast.remove(), 400);
-                }, 4000);
-            },
-
-            showView: function (viewId) {
-                ['login-view', 'workspace-view', 'admin-view'].forEach(id => {
-                    document.getElementById(id).classList.add('hidden');
-                });
-                document.getElementById(viewId).classList.remove('hidden');
-                document.getElementById(viewId).classList.add('fade-in');
-            },
-
-            checkSession: function () {
-                const user = localStorage.getItem('mentoring_user');
-                if (user) {
-                    this.currentUser = JSON.parse(user);
-                    if (this.currentUser.email === 'admin' && this.currentUser.isAdmin) {
-                        this.showView('admin-view');
-                        this.loadAdminData();
-                    } else {
-                        this.loadUserData();
-                    }
-                } else {
-                    this.showView('login-view');
-                }
-            },
-
-            login: function () {
-                const emailInput = document.getElementById('email-input');
-                const email = emailInput.value.trim().toLowerCase();
-
-                if (!email) return this.showToast('Por favor ingresa tu correo', 'error');
-
-                // Simulation for Admin
-                if (email === 'admin') {
-                    const pass = prompt('Contraseña de administrador:');
-                    if (pass === 'admin123') {
-                        this.currentUser = { email: 'admin', isAdmin: true };
-                        localStorage.setItem('mentoring_user', JSON.stringify(this.currentUser));
-                        this.showView('admin-view');
-                        this.loadAdminData();
-                        return;
-                    } else {
-                        return this.showToast('Contraseña incorrecta', 'error');
-                    }
-                }
-
-                // Normal Login - Check Role
-                this.setLoading(true);
-                fetch(this.apiUrl + '?action=getUserRole&email=' + email)
-                    .then(r => r.json())
-                    .then(res => {
-                        this.setLoading(false);
-                        if (res.status === 'success' && res.data) {
-                            this.currentUser = {
-                                email: email,
-                                ...res.data, // role, pairId, name, partnerName, area
-                                isAdmin: false
-                            };
-                            localStorage.setItem('mentoring_user', JSON.stringify(this.currentUser));
-                            this.loadUserData();
-                        } else {
-                            this.showToast('Usuario no encontrado en la base de datos', 'error');
-                        }
-                    })
-                    .catch(e => {
-                        this.setLoading(false);
-                        this.showToast('Error de conexión', 'error');
-                    });
-            },
-
-            logout: function () {
-                localStorage.removeItem('mentoring_user');
-                this.currentUser = null;
-                location.reload();
-            },
-
-            loadUserData: function () {
-                this.showView('workspace-view');
-                document.getElementById('user-name-display').textContent = this.currentUser.name || this.currentUser.email.split('@')[0];
-                document.getElementById('user-role-display').textContent = this.currentUser.role || 'Usuario';
-                document.getElementById('welcome-name').textContent = this.currentUser.name ? this.currentUser.name.split(' ')[0] : 'Compañero';
-
-                // Fetch sessions from backend
-                this.fetchSessions();
-            },
-
-            fetchSessions: function () {
-                // In a real app, you would fetch from Google Sheets here
-                // For now, we simulate or use the actual endpoint if available
-                // Using the apiUrl defined
-
-                const scriptUrl = this.apiUrl + `?action=getSessions&email=${this.currentUser.email}`;
-
-                fetch(scriptUrl)
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            this.sessions = data.data;
-                            this.renderSessions();
-                            this.updateProgress();
-                        }
-                    })
-                    .catch(e => console.error("Error loading sessions", e));
-            },
-
-            renderSessions: function () {
-                const list = document.getElementById('sessions-list');
-                const totalEl = document.getElementById('total-sessions');
-
-                if (this.sessions.length === 0) {
-                    list.innerHTML = `
-                        <div class="glass glass-card p-8 rounded-2xl text-center text-slate-500">
-                            <i data-lucide="calendar" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
-                            <p>No hay sesiones registradas aún</p>
-                        </div>`;
-                    totalEl.textContent = '0';
-                    lucide.createIcons();
-                    return;
-                }
-
-                totalEl.textContent = this.sessions.length;
-                // Use timeline-stream class on the container (needs to be added to HTML container if not present, or wrapper)
-                // Actually, let's just make the cards look like timeline nodes
-
-                list.className = "space-y-8 relative pl-8 border-l-2 border-slate-200 ml-4"; // Ad-hoc timeline container styles
-
-                list.innerHTML = this.sessions.map((s, i) => `
-                    <div class="relative pl-4 group">
-                        <!-- Timeline Node -->
-                        <div class="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-white border-4 border-indigo-500 group-hover:scale-125 transition-transform z-10"></div>
-                        
-                        <!-- Card -->
-                        <div class="glass glass-card p-6 rounded-2xl hover:border-indigo-400/50 transition-all hover:-translate-y-1">
-                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div>
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <span class="px-2 py-1 rounded-md bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">Sesión ${this.sessions.length - i}</span>
-                                        <span class="text-xs text-slate-400">${new Date(s.fecha).toLocaleDateString()}</span>
-                                    </div>
-                                    <h4 class="font-bold text-slate-800 text-xl">${s.tema}</h4>
-                                    <p class="text-slate-500 text-sm mt-2 leading-relaxed">${s.compromisos || 'Sin compromisos registrados'}</p>
-                                </div>
-                                <div class="flex items-center gap-4 text-sm font-medium">
-                                    <div class="px-3 py-1.5 rounded-lg bg-slate-50 text-slate-600 flex items-center gap-2">
-                                        <i data-lucide="clock" class="w-4 h-4 text-purple-500"></i>
-                                        <span>${s.duracion}h</span>
-                                    </div>
-                                    ${s.file ? `<a href="${s.file}" target="_blank" class="p-2 rounded-lg bg-slate-50 text-indigo-600 hover:bg-indigo-50 transition-colors"><i data-lucide="paperclip" class="w-4 h-4"></i></a>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                lucide.createIcons();
-            },
-
-            updateProgress: function () {
-                const count = this.sessions.length;
-                const max = 6; // Goal
-                const percentage = Math.min((count / max) * 100, 100);
-
-                document.getElementById('completed-count').textContent = count;
-
-                // Animate circle
-                const circle = document.getElementById('progress-ring');
-                const radius = circle.r.baseVal.value;
-                const circumference = radius * 2 * Math.PI;
-                const offset = circumference - (percentage / 100) * circumference;
-
-                circle.style.strokeDashoffset = offset;
-            },
-
-            openModal: function (modalId) {
-                document.getElementById(modalId).classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            },
-
-            closeModal: function (modalId) {
-                document.getElementById(modalId).classList.add('hidden');
-                document.body.style.overflow = '';
-            },
-
-            handleFileSelect: function (input) {
-                const file = input.files[0];
-                if (file) {
-                    document.getElementById('file-placeholder').classList.add('hidden');
-                    document.getElementById('file-selected').classList.remove('hidden');
-                    document.getElementById('file-name').textContent = file.name;
-                }
-            },
-
-            submitSession: function () {
-                this.setLoading(true);
-                const form = document.getElementById('session-form');
-                const formData = new FormData(form);
-                const fileInput = document.getElementById('evidence-file');
-
-                const sessionData = {
-                    action: 'SaveSession', // Keep casing consistent
-                    pairId: this.currentUser.pairId,
-                    mentorName: this.currentUser.role === 'Mentor' ? this.currentUser.name : this.currentUser.partnerName,
-                    menteeName: this.currentUser.role === 'Mentee' ? this.currentUser.name : this.currentUser.partnerName,
-                    role: this.currentUser.role,
-                    area: this.currentUser.area,
-
-                    email: this.currentUser.email,
-                    fecha: formData.get('fecha'),
-                    tema: formData.get('tema'),
-                    hora_inicio: formData.get('hora_inicio'),
-                    hora_fin: formData.get('hora_fin'),
-                    compromisos: formData.get('compromisos')
-                };
-
-                // Handle file upload if present
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        sessionData.fileContent = e.target.result.split(',')[1]; // Base64
-                        sessionData.fileName = file.name;
-                        sessionData.mimeType = file.type;
-                        this.sendData(sessionData);
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    this.sendData(sessionData);
-                }
-            },
-
-            sendData: function (data) {
-                fetch(this.apiUrl, {
-                    method: 'POST',
-                    body: JSON.stringify(data)
-                })
-                    .then(r => r.json())
-                    .then(response => {
-                        this.setLoading(false);
-                        if (response.status === 'success') {
-                            this.showToast('Sesión registrada exitosamente');
-                            this.closeModal('session-modal');
-                            document.getElementById('session-form').reset();
-                            // Reset file input UI
-                            document.getElementById('file-placeholder').classList.remove('hidden');
-                            document.getElementById('file-selected').classList.add('hidden');
-                            // Refresh data
-                            this.fetchSessions();
-                        } else {
-                            this.showToast('Error al guardar: ' + response.message, 'error');
-                        }
-                    })
-                    .catch(err => {
-                        this.setLoading(false);
-                        this.showToast('Error de conexión', 'error');
-                        console.error(err);
-                    });
-            },
-
-            seedData: function () {
-                if (!confirm('¿Generar datos de prueba? Esto creará duplas y sesiones aleatorias.')) return;
-
-                const btn = event.currentTarget; // Quick ref
-                const originalHtml = btn.innerHTML;
-                btn.innerHTML = '<i class="animate-spin w-4 h-4 mr-1 inline" data-lucide="loader-2"></i> ...';
-                btn.disabled = true;
-
-                fetch(this.apiUrl + '?action=seedData')
-                    .then(r => r.json())
-                    .then(res => {
-                        this.showToast('Datos generados con éxito', 'success');
-                        this.loadAdminData();
-                    })
-                    .catch(err => this.showToast('Error generando datos', 'error'))
-                    .finally(() => {
-                        btn.innerHTML = originalHtml;
-                        btn.disabled = false;
-                        lucide.createIcons();
-                    });
-            },
-
-            loadAdminData: function () {
-                const scriptUrl = this.apiUrl + `?action=getAdminData`;
-                fetch(scriptUrl)
-                    .then(r => r.json())
-                    .then(res => {
-                        if (res.status === 'success') {
-                            this.renderAdminDashboard(res.data);
-                        }
-                    });
-            },
-
-            renderAdminDashboard: function (data) {
-                // KPIs
-                document.getElementById('kpi-total').textContent = data.kpis.totalSessions;
-                document.getElementById('kpi-active').textContent = data.kpis.activeDuplas; // Fixed ID lookup
-                document.getElementById('kpi-hours').textContent = data.kpis.totalHours;
-                document.getElementById('kpi-avg').textContent = data.kpis.avgSessions;
-
-                // Dupla Routes Grid
-                const grid = document.getElementById('duplas-routes-grid');
-                if (data.duplasProgress) {
-                    grid.innerHTML = data.duplasProgress.map(d => {
-                        // Progress Bar Logic
-                        const progress = Math.min((d.count / d.goal) * 100, 100);
-                        const isCompleted = d.status === 'completed';
-                        const statusColor = isCompleted ? 'bg-emerald-500' : (d.status === 'active' ? 'bg-indigo-500' : 'bg-slate-300');
-
-                        return `
-                        <div class="glass glass-card p-6 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform">
-                            <div class="absolute top-0 left-0 w-1 h-full ${statusColor}"></div>
-                            
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="flex -space-x-3">
-                                    <div class="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600" title="${d.mentor}">${d.mentor.split(' ').map(n => n[0]).join('').substring(0, 2)}</div>
-                                    <div class="w-10 h-10 rounded-full border-2 border-white bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600" title="${d.mentee}">${d.mentee.split(' ').map(n => n[0]).join('').substring(0, 2)}</div>
-                                </div>
-                                <span class="px-2 py-1 rounded-md text-xs font-bold uppercase ${d.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}">
-                                    ${d.status === 'completed' ? 'Completado' : (d.status === 'active' ? 'En Curso' : 'Inactivo')}
-                                </span>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <h4 class="font-bold text-slate-800 text-sm">${d.mentor} & ${d.mentee}</h4>
-                                <p class="text-xs text-slate-500">Última sesión: ${d.lastSession ? new Date(d.lastSession).toLocaleDateString() : 'N/A'}</p>
-                            </div>
-
-                            <!-- Progress Bar -->
-                            <div class="space-y-1">
-                                <div class="flex justify-between text-xs font-medium text-slate-500">
-                                    <span>Progreso</span>
-                                    <span>${d.count} / ${d.goal}</span>
-                                </div>
-                                <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                                    <div class="h-full ${statusColor} transition-all duration-1000" style="width: ${progress}%"></div>
-                                </div>
-                            </div>
-                        </div>
-                        `;
-                    }).join('');
-                } else {
-                    grid.innerHTML = '<p class="text-slate-500 col-span-3 text-center py-8">No hay datos de duplas disponibles.</p>';
-                }
-
-                // Table
-                const tbody = document.getElementById('admin-table-body');
-                tbody.innerHTML = data.recentSessions.map(s => `
-                    <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-6 py-4 text-slate-600">${new Date(s.date).toLocaleDateString()}</td>
-                        <td class="px-6 py-4 font-medium text-slate-800">${s.mentor}</td>
-                        <td class="px-6 py-4 text-slate-600">${s.mentee}</td>
-                        <td class="px-6 py-4 text-slate-600">${s.title}</td>
-                        <td class="px-6 py-4 text-slate-500">${s.duration || 1}h</td>
-                    </tr>
-                `).join('');
-
-                this.renderCharts(data.charts);
-                lucide.createIcons();
-            },
-
-            renderCharts: function (data) {
-                // Sessions Chart (Area)
-                const ctx1 = document.getElementById('sessionsChart').getContext('2d');
-
-                // Destroy existing chart if it exists
-                if (this.sessionsChartInstance) {
-                    this.sessionsChartInstance.destroy();
-                }
-
-                // Create gradient
-                const gradient = ctx1.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)'); // Indigo
-                gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
-
-                this.sessionsChartInstance = new Chart(ctx1, {
-                    type: 'line',
-                    data: {
-                        labels: data.sessionsByMonth.labels,
-                        datasets: [{
-                            label: 'Sesiones',
-                            data: data.sessionsByMonth.data,
-                            borderColor: '#4f46e5',
-                            backgroundColor: gradient,
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4,
-                            pointBackgroundColor: '#ffffff',
-                            pointBorderColor: '#4f46e5',
-                            pointHoverBackgroundColor: '#4f46e5',
-                            pointHoverBorderColor: '#ffffff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } }, // Minimalist
-                        scales: {
-                            y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#f1f5f9' } },
-                            x: { grid: { display: false } }
-                        }
-                    }
-                });
-
-                // Status Chart (Doughnut)
-                const ctx2 = document.getElementById('statusChart').getContext('2d');
-
-                // Destroy existing chart if it exists
-                if (this.statusChartInstance) {
-                    this.statusChartInstance.destroy();
-                }
-
-                this.statusChartInstance = new Chart(ctx2, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Activas', 'Inactivas', 'Completadas'],
-                        datasets: [{
-                            data: [data.status.active, data.status.inactive, data.status.completed],
-                            backgroundColor: ['#4f46e5', '#cbd5e1', '#10b981'],
-                            borderWidth: 0,
-                            hoverOffset: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        cutout: '70%',
-                        plugins: {
-                            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
-                        }
-                    }
-                });
-            }
+        // Estado central
+        let state = {
+            openCover: false,
+            openGuide: false,
+            openRSVP: false,
+            rsvpName: "",
+            rsvpEmail: "",
+            rsvpSent: false,
+            sending: false,
+            joinModalOpen: false,
+            rsvpServerResponse: null,
+            lastError: null,
+            messageModal: null,
+            // FECHA ACTUALIZADA: 2 de enero de 2026, 3:00 PM
+            eventDate: new Date("2026-01-02T15:00:00-05:00"),
+            now: new Date(),
         };
 
-        // Initialize simplified sendData for generic use or override in createDupla
-        app.createDupla = function () {
-            const btn = document.querySelector('#create-dupla-form button');
-            const originalText = btn.innerText;
-            btn.disabled = true;
-            btn.innerText = "Procesando...";
+        // Función para actualizar y renderizar
+        function updateState(newState) {
+            state = { ...state, ...newState };
+            render();
+            const open = state.openGuide || state.openRSVP || state.joinModalOpen || state.messageModal;
+            document.body.classList.toggle('modal-open', open);
+        }
 
-            const form = document.getElementById('create-dupla-form');
-            const formData = new FormData(form);
-            const data = {
-                action: 'createDupla',
-                mentor: formData.get('mentor'),
-                mentorEmail: formData.get('mentorEmail'),
-                mentee: formData.get('mentee'),
-                menteeEmail: formData.get('menteeEmail'),
-                area: formData.get('area'),
-                goal: formData.get('goal')
+        // --- Lógica del Reloj ---
+        function calculateCountdown() {
+            const timeDiff = state.eventDate - state.now;
+            const canJoin = timeDiff <= 5 * 60 * 1000 && timeDiff > -2 * 60 * 60 * 1000;
+
+            const days = Math.max(0, Math.floor(timeDiff / (1000 * 60 * 60 * 24)));
+            const hours = Math.max(0, Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+            const minutes = Math.max(0, Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)));
+            const seconds = Math.max(0, Math.floor((timeDiff % (1000 * 60)) / 1000));
+
+            let countdownText = "";
+            if (timeDiff > 0) {
+                if (days > 0) countdownText += `${days}d `;
+                countdownText += `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+            } else if (timeDiff > -2 * 60 * 60 * 1000) {
+                countdownText = "¡EN VIVO!";
+            } else {
+                countdownText = "Finalizado";
+            }
+
+            return { canJoin, countdownText };
+        }
+
+        function tick() {
+            updateState({ now: new Date() });
+            const countdownEl = document.getElementById('countdown');
+            if (countdownEl) {
+                countdownEl.textContent = calculateCountdown().countdownText;
+            }
+        }
+
+        // --- Utilidad ---
+        function isValidEmail(email) {
+            return typeof email === "string" && email.includes("@") && email.includes(".") && email.length > 5;
+        }
+
+        function closeAllModals() {
+            updateState({
+                openGuide: false,
+                openRSVP: false,
+                joinModalOpen: false,
+                messageModal: null
+            });
+        }
+
+        // --- Actions ---
+        function handleJoinClick(e) {
+            const { canJoin } = calculateCountdown();
+            if (!canJoin) {
+                updateState({ joinModalOpen: true });
+            } else {
+                window.open(MEET_URL, "_blank", "noopener,noreferrer");
+            }
+        }
+
+        async function submitRsvp(e) {
+            e.preventDefault();
+            updateState({ lastError: null, rsvpServerResponse: null });
+
+            const name = state.rsvpName.trim();
+            const email = state.rsvpEmail.trim();
+
+            if (!name) {
+                updateState({ messageModal: { title: "Falta Nombre", message: "Por favor ingresa tu nombre completo.", type: "error" } });
+                return;
+            }
+            if (!isValidEmail(email)) {
+                updateState({ messageModal: { title: "Correo Inválido", message: "Por favor ingresa un correo válido.", type: "error" } });
+                return;
+            }
+
+            updateState({ sending: true });
+
+            const payloadObj = {
+                name: name,
+                email: email,
+                timestamp: new Date().toISOString(),
+                source: "InvitacionWeb-ElRadarDelCielo",
             };
 
-            fetch(this.apiUrl, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            })
-                .then(r => r.json())
-                .then(res => {
-                    btn.disabled = false;
-                    btn.innerText = originalText;
-                    if (res.status === 'success') {
-                        this.showToast('Dupla creada y correos enviados');
-                        this.closeModal('create-dupla-modal');
-                        form.reset();
-                        this.loadAdminData();
-                    } else {
-                        this.showToast('Error: ' + res.message, 'error');
-                    }
-                })
-                .catch(e => {
-                    btn.disabled = false;
-                    btn.innerText = originalText;
-                    this.showToast('Error de conexión', 'error');
-                });
-        };
+            try {
+                if (SHEET_ENDPOINT && SHEET_ENDPOINT.startsWith('http')) {
+                    const params = new URLSearchParams();
+                    Object.keys(payloadObj).forEach((k) => params.append(k, payloadObj[k]));
 
-        // Start App
-        document.addEventListener('DOMContentLoaded', () => app.init());
+                    const res = await fetch(SHEET_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params.toString(),
+                    });
+
+                    const text = await res.text();
+                    let json = null;
+                    try { json = JSON.parse(text); } catch (err) { }
+
+                    if (!res.ok) {
+                        throw new Error(`Error ${res.status} - ${text}`);
+                    }
+
+                    updateState({
+                        rsvpServerResponse: { ok: true, status: res.status, body: json || text },
+                        rsvpSent: true,
+                        rsvpName: "",
+                        rsvpEmail: "",
+                        messageModal: { title: "¡Inscripción Recibida!", message: "Tu asistencia ha sido confirmada.", type: "success" }
+                    });
+                    setTimeout(() => updateState({ openRSVP: false }), 2500);
+
+                } else {
+                    // Simulación
+                    console.warn('Simulando envío:', payloadObj);
+                    updateState({
+                        rsvpServerResponse: { ok: true, simulated: true },
+                        rsvpSent: true,
+                        rsvpName: "",
+                        rsvpEmail: "",
+                        messageModal: { title: "¡Simulación Exitosa!", message: "Envío simulado correctamente.", type: "success" }
+                    });
+                    setTimeout(() => updateState({ openRSVP: false }), 2500);
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                updateState({
+                    lastError: err.message,
+                    messageModal: { title: "Error", message: "No se pudo enviar la inscripción. Intenta de nuevo.", type: "error" }
+                });
+            } finally {
+                updateState({ sending: false });
+            }
+        }
+
+        // --- Render Functions ---
+
+        function renderMessageModal() {
+            if (!state.messageModal) return '';
+            const { title, message, type } = state.messageModal;
+            const bgColor = type === "error" ? "bg-rose-600" : "bg-emerald-600";
+
+            return `
+                <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="updateState({ messageModal: null })"></div>
+                    <div class="relative w-full max-w-sm rounded-2xl p-6 shadow-2xl z-20 ${bgColor} text-white border border-white/10">
+                        <h4 class="text-xl font-bold font-title mb-2">${title}</h4>
+                        <p class="text-white/90 mb-6 font-light">${message}</p>
+                        <div class="flex justify-end">
+                            <button onclick="updateState({ messageModal: null })" class="px-5 py-2 rounded-xl bg-white text-slate-900 font-bold hover:bg-opacity-90 transition">
+                                Aceptar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderJoinModal() {
+            if (!state.joinModalOpen) return '';
+            return `
+                <div class="fixed inset-0 z-60 flex items-center justify-center p-4">
+                    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="updateState({ joinModalOpen: false })"></div>
+                    <div class="relative bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl max-w-md w-full z-10 text-center">
+                        <div class="w-16 h-16 rounded-full bg-cyan-500/10 flex items-center justify-center mx-auto mb-4 radar-effect">
+                            <svg class="w-8 h-8 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white font-title mb-2">¡Aún no es la hora!</h4>
+                        <p class="text-slate-300 mb-6 leading-relaxed">
+                            La transmisión comenzará **5 minutos antes** de las 3:00 p.m.<br>
+                            ¡Prepárate para actuar!
+                        </p>
+                        <button onclick="updateState({ joinModalOpen: false })" class="px-6 py-3 rounded-xl bg-cyan-600 text-white font-bold hover:bg-cyan-500 transition w-full">Entendido</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGuideModal() {
+            if (!state.openGuide) return '';
+            return `
+                <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="updateState({ openGuide: false })"></div>
+                    <div class="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl z-10">
+                        <h3 class="text-2xl font-bold text-white font-title mb-4">Hoja de Ruta</h3>
+                        <p class="text-slate-300 mb-6">Accede a la guía completa para preparar tu corazón y mente para el mensaje.</p>
+                        <a href="${GUIDE_URL}" target="_blank" onclick="updateState({ openGuide: false })"
+                            class="block w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-center font-bold hover:from-cyan-500 hover:to-blue-500 transition shadow-lg shadow-cyan-900/20">
+                            Descargar Documento
+                        </a>
+                        <button onclick="updateState({ openGuide: false })" class="mt-4 w-full py-2 text-slate-400 hover:text-white transition">Cerrar</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRSVPModal() {
+            if (!state.openRSVP) return '';
+            return `
+                <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="updateState({ openRSVP: false })"></div>
+                    <form onsubmit="submitRsvp(event)" class="relative w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl z-10">
+                        <h3 class="text-xl font-bold text-white font-title mb-1">Confirmar Asistencia</h3>
+                        <p class="text-sm text-cyan-400 mb-6">La fe que se arremanga</p>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs uppercase text-slate-400 font-bold mb-1">Nombre</label>
+                                <input id="rsvpName" required type="text" value="${state.rsvpName}" oninput="state.rsvpName = this.value"
+                                    class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none transition" placeholder="Tu nombre">
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase text-slate-400 font-bold mb-1">Correo</label>
+                                <input id="rsvpEmail" required type="email" value="${state.rsvpEmail}" oninput="state.rsvpEmail = this.value"
+                                    class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none transition" placeholder="tucorreo@email.com">
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex gap-3">
+                            <button type="submit" ${state.sending ? 'disabled' : ''} class="flex-1 py-3 rounded-lg bg-cyan-600 text-white font-bold hover:bg-cyan-500 transition disabled:opacity-50 flex justify-center items-center gap-2">
+                                ${state.sending ? '<div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>' : ''}
+                                <span>${state.sending ? 'Enviando...' : 'Confirmar'}</span>
+                            </button>
+                            <button type="button" onclick="updateState({ openRSVP: false })" class="px-4 py-3 rounded-lg border border-slate-600 text-slate-300 font-bold hover:bg-slate-800 transition">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        // --- Main Render ---
+        function render() {
+            const app = document.getElementById('app');
+            if (!app) return;
+
+            // Preserve Focus Logic (Simplified)
+            let focusedId = document.activeElement ? document.activeElement.id : null;
+            let focusedVal = document.activeElement ? document.activeElement.value : null;
+
+            const { openCover } = state;
+            const { canJoin, countdownText } = calculateCountdown();
+
+            let mainContent = '';
+
+            if (!openCover) {
+                // COVER
+                mainContent = `
+                    <div class="text-center p-8 max-w-sm w-full animate-fade-in-up">
+                        <div class="relative w-32 h-32 mx-auto mb-8 rounded-full p-1 bg-gradient-to-tr from-cyan-400 to-yellow-400 radar-effect">
+                            <img src="https://i.imgur.com/2MVPpVr.png" class="w-full h-full object-cover rounded-full border-4 border-slate-900" alt="Radar Icon">
+                        </div>
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-yellow-200 mb-2 tracking-tight drop-shadow-lg">
+                            La fe que<br>se arremanga
+                        </h1>
+                        <p class="text-lg text-cyan-200/80 tracking-widest uppercase font-light mb-8 font-title">Menos palabras mas acción</p>
+
+                        <button onclick="updateState({ openCover: true })"
+                            class="group relative px-8 py-3 bg-slate-800 overflow-hidden rounded-full transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] border border-cyan-500/30">
+                            <div class="absolute inset-0 w-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 transition-all duration-[250ms] ease-out group-hover:w-full"></div>
+                            <span class="relative text-cyan-300 font-bold tracking-wider group-hover:text-white transition-colors">MANOS A LA OBRA</span>
+                        </button>
+                    </div>
+                `;
+            } else {
+                // INVITATION CARD
+                mainContent = `
+                    <div class="w-full max-w-4xl animate-fade-in transition-all duration-700">
+                        <div class="glass-panel rounded-3xl overflow-hidden shadow-2xl relative">
+                            <!-- Background Decoration -->
+                            <div class="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl"></div>
+                            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl"></div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 relative z-10">
+                                <!-- Left Column: Visual -->
+                                <div class="p-8 md:p-12 flex flex-col justify-center items-center text-center md:border-r border-white/10 bg-black/20">
+                                    <div class="relative mb-6 group cursor-pointer hover:scale-[1.02] transition-transform duration-500">
+                                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-500"></div>
+                                        <img src="https://i.imgur.com/2MVPpVr.png" alt="El Radar del Cielo" 
+                                            class="relative w-full max-w-[280px] rounded-xl shadow-2xl border border-white/10">
+                                    </div>
+                                    <h2 class="text-3xl font-bold text-white font-title mb-2">La fe que se arremanga</h2>
+                                    <p class="text-cyan-200 text-sm tracking-widest uppercase">Menos palabras mas acción</p>
+                                </div>
+
+                                <!-- Right Column: Info & Actions -->
+                                <div class="p-8 md:p-12 flex flex-col justify-between">
+                                    <div class="space-y-6">
+                                        <div>
+                                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-3">
+                                                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                                                <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Transmisión en Vivo</span>
+                                            </div>
+                                            <h3 class="text-4xl font-bold text-white font-title mb-1">2 Enero 2026</h3>
+                                            <p class="text-lg text-slate-300">Viernes • 3:00 P.M.</p>
+                                        </div>
+
+                                        <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+                                            <p class="text-xs uppercase text-slate-500 font-bold mb-1">Tiempo Restante</p>
+                                            <p id="countdown" class="text-2xl font-mono text-white font-bold tracking-tight">${countdownText}</p>
+                                        </div>
+                                        
+                                        <div class="text-sm text-slate-300 leading-relaxed border-l-2 border-cyan-500/30 pl-4">
+                                            <p>No basta con creer, hay que actuar. Únete a nosotros para poner la fe en movimiento y trabajar por lo que visionamos. <span class="text-cyan-200 font-bold">Es hora de arremangarse.</span></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                                        <button onclick="handleJoinClick(event)" 
+                                            class="col-span-1 sm:col-span-2 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-[1.02] active:scale-95 flex justify-center items-center gap-2
+                                            ${canJoin ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-cyan-500/25' : 'bg-slate-800 border border-slate-700 text-slate-400'}">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/></svg>
+                                            <span>Ir a la Acción</span>
+                                        </button>
+                                        
+                                        <button onclick="updateState({ openGuide: true })" class="py-3 rounded-xl border border-slate-600 bg-transparent text-slate-200 font-semibold hover:bg-slate-800 transition">
+                                            Abrir Guía
+                                        </button>
+                                        
+                                        <button onclick="updateState({ openRSVP: true })" class="py-3 rounded-xl bg-slate-700 text-white font-semibold hover:bg-slate-600 transition">
+                                            Confirmar Asistencia
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="mt-8 pt-4 border-t border-white/5 text-center">
+                                        <p class="text-[10px] text-slate-500 uppercase tracking-widest">La Casa de Juanita · Fe con Propósito</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            app.innerHTML = `
+                <main class="min-h-screen bg-[#050B14] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050B14] to-[#020617] flex items-center justify-center p-4 selection:bg-cyan-500/30">
+                    ${mainContent}
+                </main>
+                ${renderJoinModal()}
+                ${renderGuideModal()}
+                ${renderRSVPModal()}
+                ${renderMessageModal()}
+            `;
+
+            // Restore focus (basic)
+            if (focusedId) {
+                const el = document.getElementById(focusedId);
+                if (el) {
+                    el.value = focusedVal;
+                    el.focus();
+                }
+            }
+        }
+
+        window.onload = function () {
+            setInterval(tick, 1000);
+            tick();
+            window.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") { closeAllModals(); if (state.openCover) updateState({ openCover: false }); }
+            });
+            render();
+        };
     </script>
+</head>
+
+<body class="bg-[#050B14] text-slate-200 antialiased">
+    <div id="app"></div>
 </body>
 
 </html>
